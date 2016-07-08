@@ -13,10 +13,10 @@ subject = 1
 
 epochs = mne.read_epochs(data_folder + "sub_%s-epo.fif" % subject)
 
-X = epochs[:239].get_data().reshape([239, 26928])
-y = epochs[:239].events[:, 2]
-y = (y != 4)
-y = y.astype("int")
+data_shape = epochs.get_data().shape
+
+X = epochs[:239].get_data().reshape([239, data_shape[1] * data_shape[2]])
+y = (epochs[:239].events[:, 2] != 4).astype("int")
 
 cv = StratifiedShuffleSplit(y, test_size=0.1)
 
