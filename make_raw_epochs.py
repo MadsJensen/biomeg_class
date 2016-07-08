@@ -3,9 +3,11 @@ import scipy.io as sio
 
 from my_settings import data_folder
 
-planar = sio.loadmat(data_folder + "meg_data_1a.mat")["planardat"]
+subject = 1
 
-events = mne.read_events(data_folder + "sub_1-eve.fif")
+planar = sio.loadmat(data_folder + "meg_data_%sa.mat" % subject)["planardat"]
+
+events = mne.read_events(data_folder + "sub_%s-eve.fif" % subject)
 
 info = mne.create_info(204, ch_types="grad", sfreq=125)
 
@@ -23,7 +25,6 @@ event_id = {"Anger/non-target": 1,
             "Test": 10}
 
 tmin, tmax = -0.25, 0.8
-
 reject = {"grad": 4000e-13}  # T / m (gradiometers)
 
 epochs_params = dict(events=events,
@@ -35,3 +36,4 @@ epochs_params = dict(events=events,
                      preload=True)
 
 epochs = mne.Epochs(raw, **epochs_params)
+epochs.save(data_folder + "sub_%s-epo.fif" % subject)
