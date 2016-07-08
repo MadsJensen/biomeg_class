@@ -1,5 +1,5 @@
 import mne
-from mne.layout import _merge_grad_data as grad_rms
+from mne.channels.layout import _merge_grad_data as grad_rms
 import scipy.io as sio
 import numpy as np
 
@@ -44,4 +44,4 @@ epochs_params = dict(events=events,
 epochs = mne.Epochs(raw, **epochs_params)
 epochs.save(data_folder + "sub_%s-epo.fif" % subject)
 
-rms_data = grad_rms(epochs.get_data())
+rms_data = np.asarray([grad_rms(t) for t in epochs.get_data()])
