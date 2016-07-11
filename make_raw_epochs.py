@@ -21,7 +21,10 @@ info["lowpass"] = 41
 info["highpass"] = 0.1
 
 raw = mne.io.RawArray(planar, info)
+raw.save(data_folder + "sub_%s-raw.fif" % subject)
 
+
+# epochs
 event_id = {"Anger/non-target": 1,
             "Disgust/non-target": 2,
             "Fear/non-target": 3,
