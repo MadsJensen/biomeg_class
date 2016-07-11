@@ -72,11 +72,22 @@ pow_nontarget = np.abs(tfr_nontarget)**2
 comb_target = combine_grad_tfr(pow_target)
 comb_nontarget = combine_grad_tfr(pow_nontarget)
 
-# classification
-X = np.concatenate([comb_target.reshape([len(comb_target), -1]),
-                    comb_nontarget.reshape([len(comb_nontarget), -1])])
-y = np.concatenate([np.zeros(len(comb_target)), np.ones(len(comb_nontarget))])
+times = epochs.times
+comb_target_bs = mne.baseline.rescale(comb_target,
+                                      times,
+                                      baseline=(None, 0),
+                                      mode="zscore")
 
+comb_nontarget_bs = mne.baseline.rescale(comb_nontarget,
+                                         times,
+                                         baseline=(None, 0),
+                                         mode="zscore")
+
+# classification
+X = np.concatenate([comb_target_bs.reshape([len(comb_target_bs), -1]),
+                    comb_nontarget_bs.reshape([len(comb_nontarget_bs), -1])])
+y = np.concatenate(
+    [np.zeros(len(comb_target_bs)), np.ones(len(comb_nontarget_bs))])
 
 cv = StratifiedShuffleSplit(y, test_size=0.1)
 
